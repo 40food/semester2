@@ -1,0 +1,62 @@
+server:
+  port: 8088
+
+---
+
+spring:
+  profiles: default
+  cloud:
+    gateway:
+      routes:
+        - id: backend
+          uri: http://localhost:8080 #각 포트를 연결
+          predicates: #연결할 path
+            - Path=/catchers/**, /players/**, /pitchers/**, /defenders/**
+        - id: backend-subdomain
+          uri: http://localhost:8083
+          predicates:
+            - Path=/clubs/**, /teamMembers/**
+        - id: frontend-subdomain
+          uri: http://localhost:8082
+          predicates:
+            - Path=/shop/**, /shop/js/**
+        - id: frontend
+          uri: http://localhost:8081
+          predicates:
+            - Path=/**
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins:
+              - "*"
+            allowedMethods:
+              - "*"
+            allowedHeaders:
+              - "*"
+            allowCredentials: true
+
+
+---
+
+spring:
+  profiles: docker
+  cloud:
+    gateway:
+      routes:
+        - id: BoundedContext433
+          uri: http://BoundedContext433:8080
+          predicates:
+            - Path= 
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins:
+              - "*"
+            allowedMethods:
+              - "*"
+            allowedHeaders:
+              - "*"
+            allowCredentials: true
+
+server:
+  port: 8080
